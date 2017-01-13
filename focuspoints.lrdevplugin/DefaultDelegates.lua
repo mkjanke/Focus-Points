@@ -36,12 +36,14 @@ DefaultDelegates.POINTTYPE_FACE = "face"                                  -- A f
 DefaultDelegates.pointTemplates = {
   af_selected_infocus = {
     center = { fileTemplate = "assets/imgs/focus_point_red-fat_center_%s.png", anchorX = 23, anchorY = 23 },
+    center_small = { fileTemplate = "assets/imgs/focus_point_red_center_%s.png", anchorX = 23, anchorY = 23 },
     corner = { fileTemplate = "assets/imgs/focus_point_red-fat_corner_%s.png", anchorX = 23, anchorY = 23 },
     corner_small = { fileTemplate = "assets/imgs/focus_point_red-fat_corner-small_%s.png", anchorX = 23, anchorY = 23 },
     angleStep = 5
   },
   af_infocus = {
     center = { fileTemplate = "assets/imgs/focus_point_red-fat_center_%s.png", anchorX = 23, anchorY = 23 },
+    center_small = { fileTemplate = "assets/imgs/focus_point_red_center_%s.png", anchorX = 23, anchorY = 23 },
     corner = { fileTemplate = "assets/imgs/focus_point_black_corner_%s.png", anchorX = 23, anchorY = 23 },
     corner_small = { fileTemplate = "assets/imgs/focus_point_black_corner-small_%s.png", anchorX = 23, anchorY = 23 },
     angleStep = 5
@@ -169,30 +171,4 @@ function DefaultDelegates.normalizeFocusPointName(focusPoint)
     focusPoint = string.sub(focusPoint, 1, 2)
   end
   return focusPoint
-end
-
---[[
-  -- method figures out the orientation the photo was shot at by looking at the metadata
-  -- returns the rotation in degrees in trigonometric sense
---]]
-function DefaultDelegates.getShotOrientation(photo, metaData)
-  local dimens = photo:getFormattedMetadata("dimensions")
-  local orgPhotoW, orgPhotoH = parseDimens(dimens) -- original dimension before any cropping
-
-  local metaOrientation = ExifUtils.findFirstMatchingValue(metaData, { "Orientation" })
-  if metaOrientation == nil then
-    return 0
-  end
-
-  if string.match(metaOrientation, "90 CCW") and orgPhotoW < orgPhotoH then
-    return 90     -- 90° CCW
-  elseif string.match(metaOrientation, "270 CCW") and orgPhotoW < orgPhotoH then
-    return -90    -- 270° CCW
-  elseif string.match(metaOrientation, "90") and orgPhotoW < orgPhotoH then
-    return -90    -- 90° CW
-  elseif string.match(metaOrientation, "270") and orgPhotoW < orgPhotoH then
-    return 90     -- 270° CCW
-  end
-
-  return 0
 end
